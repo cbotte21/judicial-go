@@ -77,5 +77,5 @@ func (judicial *Judicial) Integrity(ctx context.Context, integrityRequest *pb.In
 	if err != nil { // Player is not banned
 		return &pb.IntegrityResponse{Status: true}, nil
 	}
-	return &pb.IntegrityResponse{Status: false}, errors.New("integrityRequest is banned until " + ban.Expiry)
+	return &pb.IntegrityResponse{Status: false}, errors.New("player is banned until " + ban.Expiry)
 }
