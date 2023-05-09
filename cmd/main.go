@@ -1,6 +1,7 @@
 package main
 
 import (
+	hive "github.com/cbotte21/hive-go/pb"
 	"github.com/cbotte21/judicial-go/internal"
 	pb "github.com/cbotte21/judicial-go/pb"
 	"github.com/cbotte21/microservice-common/pkg/enviroment"
@@ -24,12 +25,23 @@ func main() {
 	}
 	grpcServer := grpc.NewServer()
 
+	//Register handlers to attach
+	hiveClient := hive.NewHiveServiceClient(getHiveConn(enviroment.GetEnvVariable("hive_port")))
 	//Initialize judicial
-	jury := internal.NewJudicial()
+	jury := internal.NewJudicial(&hiveClient)
 
 	pb.RegisterJudicialServiceServer(grpcServer, &jury)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to initialize grpc server.")
 	}
+}
+
+func getHiveConn(port string) *grpc.ClientConn {
+	var conn *grpc.ClientConn
+	conn, err := grpc.Dial("hive:"+enviroment.GetEnvVariable("hive_port"), grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	return conn
 }

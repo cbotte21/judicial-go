@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"errors"
+	hive "github.com/cbotte21/hive-go/pb"
 	"github.com/cbotte21/judicial-go/internal/schema"
 	"github.com/cbotte21/judicial-go/pb"
 	"github.com/cbotte21/microservice-common/pkg/datastore"
@@ -11,12 +12,13 @@ import (
 )
 
 type Judicial struct {
-	JwtSecret *jwtParser.JwtSecret
+	JwtSecret  *jwtParser.JwtSecret
+	HiveClient *hive.HiveServiceClient
 	pb.UnimplementedJudicialServiceServer
 }
 
-func NewJudicial() Judicial {
-	return Judicial{}
+func NewJudicial(hiveClient *hive.HiveServiceClient) Judicial {
+	return Judicial{HiveClient: hiveClient}
 }
 
 func canBan(role int) error {
@@ -40,7 +42,7 @@ func (judicial *Judicial) Ban(ctx context.Context, banRequest *pb.BanRequest) (*
 				Timestamp: time.Now().String(),
 			})
 			if err == nil { //Success
-				//TODO: Disconnect player from hive-go
+				_, _ = (*judicial.HiveClient).ForceDisconnect(context.Background(), &hive.DisconnectRequest{Id: banRequest.GetXId()})
 				return &pb.BanResponse{Status: true}, nil
 			}
 		}
