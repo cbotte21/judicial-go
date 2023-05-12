@@ -16,7 +16,6 @@ func main() {
 	//Verify enviroment variables exist
 	enviroment.VerifyEnvVariable("port")
 	enviroment.VerifyEnvVariable("hive_port")
-	enviroment.VerifyEnvVariable("mongo_uri")
 
 	//Get port
 	port := enviroment.GetEnvVariable("port")
