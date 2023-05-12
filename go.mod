@@ -6,12 +6,12 @@ require google.golang.org/grpc v1.55.0
 
 require (
 	github.com/cbotte21/hive-go v0.0.0-20230509214104-94c2c7437ed5
+	github.com/cbotte21/microservice-common v0.0.0-20230512153523-43f681bfb101
 	github.com/golang/protobuf v1.5.3
 	google.golang.org/protobuf v1.30.0
 )
 
 require (
-	github.com/cbotte21/microservice-common v0.0.0-20230512153523-43f681bfb101 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
