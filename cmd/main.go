@@ -30,7 +30,15 @@ func main() {
 	//Register handlers to attach
 	hiveClient := hive.NewHiveServiceClient(getHiveConn(enviroment.GetEnvVariable("hive_port")))
 	mongoBanClient := datastore.MongoClient[schema.Ban]{}
+	err = mongoBanClient.Init()
+	if err != nil {
+		panic(err)
+	}
 	mongoUnbanClient := datastore.MongoClient[schema.Unban]{}
+	err = mongoUnbanClient.Init()
+	if err != nil {
+		panic(err)
+	}
 	//Initialize judicial
 	jury := internal.NewJudicial(&hiveClient, &mongoBanClient, &mongoUnbanClient)
 
