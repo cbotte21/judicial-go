@@ -8,6 +8,10 @@ type Ban struct { //Payload
 	Timestamp string `bson:"timestamp,omitempty"`
 }
 
+func (ban Ban) Key() string {
+	return ""
+}
+
 func (ban Ban) Database() string {
 	return "judicial"
 }

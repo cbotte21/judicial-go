@@ -6,6 +6,10 @@ type Unban struct { //Payload
 	Timestamp string `bson:"timestamp,omitempty"`
 }
 
+func (unban Unban) Key() string {
+	return ""
+}
+
 func (unban Unban) Database() string {
 	return "judicial"
 }

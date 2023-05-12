@@ -3,7 +3,9 @@ package main
 import (
 	hive "github.com/cbotte21/hive-go/pb"
 	"github.com/cbotte21/judicial-go/internal"
+	"github.com/cbotte21/judicial-go/internal/schema"
 	pb "github.com/cbotte21/judicial-go/pb"
+	"github.com/cbotte21/microservice-common/pkg/datastore"
 	"github.com/cbotte21/microservice-common/pkg/enviroment"
 	"google.golang.org/grpc"
 	"log"
@@ -27,8 +29,10 @@ func main() {
 
 	//Register handlers to attach
 	hiveClient := hive.NewHiveServiceClient(getHiveConn(enviroment.GetEnvVariable("hive_port")))
+	mongoBanClient := datastore.MongoClient[schema.Ban]{}
+	mongoUnbanClient := datastore.MongoClient[schema.Unban]{}
 	//Initialize judicial
-	jury := internal.NewJudicial(&hiveClient)
+	jury := internal.NewJudicial(&hiveClient, &mongoBanClient, &mongoUnbanClient)
 
 	pb.RegisterJudicialServiceServer(grpcServer, &jury)
 

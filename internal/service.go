@@ -12,13 +12,15 @@ import (
 )
 
 type Judicial struct {
-	JwtSecret  *jwtParser.JwtSecret
-	HiveClient *hive.HiveServiceClient
+	JwtSecret        *jwtParser.JwtSecret
+	HiveClient       *hive.HiveServiceClient
+	MongoBanClient   *datastore.MongoClient[schema.Ban]
+	MongoUnbanClient *datastore.MongoClient[schema.Unban]
 	pb.UnimplementedJudicialServiceServer
 }
 
-func NewJudicial(hiveClient *hive.HiveServiceClient) Judicial {
-	return Judicial{HiveClient: hiveClient}
+func NewJudicial(hiveClient *hive.HiveServiceClient, mongoBanClient *datastore.MongoClient[schema.Ban], mongoUnbanClient *datastore.MongoClient[schema.Unban]) Judicial {
+	return Judicial{HiveClient: hiveClient, MongoBanClient: mongoBanClient, MongoUnbanClient: mongoUnbanClient}
 }
 
 func canBan(role int) error {
@@ -34,7 +36,7 @@ func (judicial *Judicial) Ban(ctx context.Context, banRequest *pb.BanRequest) (*
 	if err == nil {
 		err = canBan(admin.Role)
 		if err == nil {
-			err := datastore.Create(schema.Ban{
+			err := judicial.MongoBanClient.Create(schema.Ban{
 				Player:    banRequest.XId,
 				God:       admin.Id,
 				Reason:    banRequest.GetReason(),
@@ -56,9 +58,9 @@ func (judicial *Judicial) Unban(ctx context.Context, unbanRequest *pb.UnbanReque
 	if err == nil {
 		err = canBan(admin.Role)
 		if err == nil {
-			err := datastore.Delete(schema.Ban{Player: unbanRequest.GetXId()})
+			err := judicial.MongoBanClient.Delete(schema.Ban{Player: unbanRequest.GetXId()})
 			if err == nil {
-				err := datastore.Create(schema.Unban{
+				err := judicial.MongoUnbanClient.Create(schema.Unban{
 					Player:    unbanRequest.GetXId(),
 					God:       admin.Id,
 					Timestamp: time.Now().String(),
@@ -73,7 +75,7 @@ func (judicial *Judicial) Unban(ctx context.Context, unbanRequest *pb.UnbanReque
 }
 
 func (judicial *Judicial) Integrity(ctx context.Context, integrityRequest *pb.IntegrityRequest) (*pb.IntegrityResponse, error) {
-	ban, err := datastore.Find(schema.Ban{Player: integrityRequest.GetXId()})
+	ban, err := judicial.MongoBanClient.Find(schema.Ban{Player: integrityRequest.GetXId()})
 	if err != nil { // Player is not banned
 		return &pb.IntegrityResponse{Status: true}, nil
 	}
