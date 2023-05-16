@@ -5,8 +5,8 @@ go 1.19
 require google.golang.org/grpc v1.55.0
 
 require (
-	github.com/cbotte21/hive-go v0.0.0-20230509214104-94c2c7437ed5
-	github.com/cbotte21/microservice-common v0.0.0-20230512153523-43f681bfb101
+	github.com/cbotte21/hive-go v0.0.0-20230516025541-fd9c361fd13f
+	github.com/cbotte21/microservice-common v0.0.0-20230512174103-6af9aabed65f
 	github.com/golang/protobuf v1.5.3
 	google.golang.org/protobuf v1.30.0
 )
@@ -17,6 +17,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
+	github.com/gomodule/redigo v1.8.9 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/klauspost/compress v1.16.5 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
