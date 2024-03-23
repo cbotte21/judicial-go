@@ -4,21 +4,21 @@ import (
 	hive "github.com/cbotte21/hive-go/pb"
 	"github.com/cbotte21/judicial-go/internal"
 	"github.com/cbotte21/judicial-go/internal/schema"
-	pb "github.com/cbotte21/judicial-go/pb"
+	"github.com/cbotte21/judicial-go/pb"
 	"github.com/cbotte21/microservice-common/pkg/datastore"
-	"github.com/cbotte21/microservice-common/pkg/enviroment"
+	"github.com/cbotte21/microservice-common/pkg/environment"
 	"google.golang.org/grpc"
 	"log"
 	"net"
 )
 
 func main() {
-	//Verify enviroment variables exist
-	enviroment.VerifyEnvVariable("port")
-	enviroment.VerifyEnvVariable("hive_internal_addr")
+	//Verify environment variables exist
+	environment.VerifyEnvVariable("port")
+	environment.VerifyEnvVariable("hive_internal_addr")
 
 	//Get port
-	port := enviroment.GetEnvVariable("port")
+	port := environment.GetEnvVariable("port")
 
 	//Setup tcp listener
 	lis, err := net.Listen("tcp", ":"+port)
@@ -28,7 +28,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 
 	//Register handlers to attach
-	hiveClient := hive.NewHiveServiceClient(getHiveConn(enviroment.GetEnvVariable("hive_port")))
+	hiveClient := hive.NewHiveServiceClient(getHiveConn())
 	mongoBanClient := datastore.MongoClient[schema.Ban]{}
 	err = mongoBanClient.Init()
 	if err != nil {
@@ -49,9 +49,9 @@ func main() {
 	}
 }
 
-func getHiveConn(port string) *grpc.ClientConn {
+func getHiveConn() *grpc.ClientConn {
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial(enviroment.GetEnvVariable("hive_internal_addr"), grpc.WithInsecure())
+	conn, err := grpc.Dial(environment.GetEnvVariable("hive_internal_addr"), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
