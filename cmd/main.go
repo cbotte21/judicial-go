@@ -15,7 +15,7 @@ import (
 func main() {
 	//Verify enviroment variables exist
 	enviroment.VerifyEnvVariable("port")
-	enviroment.VerifyEnvVariable("hive_addr")
+	enviroment.VerifyEnvVariable("hive-internal_addr")
 
 	//Get port
 	port := enviroment.GetEnvVariable("port")
