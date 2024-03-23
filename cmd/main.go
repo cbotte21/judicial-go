@@ -15,7 +15,7 @@ import (
 func main() {
 	//Verify enviroment variables exist
 	enviroment.VerifyEnvVariable("port")
-	enviroment.VerifyEnvVariable("hive-internal_addr")
+	enviroment.VerifyEnvVariable("hive_internal_addr")
 
 	//Get port
 	port := enviroment.GetEnvVariable("port")
@@ -51,7 +51,7 @@ func main() {
 
 func getHiveConn(port string) *grpc.ClientConn {
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial(enviroment.GetEnvVariable("hive-internal_addr"), grpc.WithInsecure())
+	conn, err := grpc.Dial(enviroment.GetEnvVariable("hive_internal_addr"), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
