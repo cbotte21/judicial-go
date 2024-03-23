@@ -51,7 +51,7 @@ func main() {
 
 func getHiveConn(port string) *grpc.ClientConn {
 	var conn *grpc.ClientConn
-	conn, err := grpc.Dial(enviroment.GetEnvVariable("hive_addr"), grpc.WithInsecure())
+	conn, err := grpc.Dial(enviroment.GetEnvVariable("hive-internal_addr"), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
